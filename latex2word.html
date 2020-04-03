@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"> 
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<link rel="stylesheet" type="text/css"
+  href="https://latex.codecogs.com/css/equation-embed.css" />
+<!--[if lte IE 7]>
+<link rel="stylesheet" href="http://latex.codecogs.com/css/ie6.css" type="text/css"/>
+<![endif]-->
+<script type="text/javascript" 
+  src="https://latex.codecogs.com/js/eq_config.js" ></script>
+<script type="text/javascript" 
+  src="https://latex.codecogs.com/js/eq_editor-lite-18.js" ></script>
+<script type="text/javascript">
+MathJax.Hub.Config({
+    extensions: ["toMathML.js"]
+});
+MathJax.Hub.setRenderer("NativeMML");
+
+function toMathML(jax,callback) {
+    var mml;
+    try {
+        mml = jax.root.toMathML("");
+    } catch(err) {
+        if (!err.restart) {throw err} // an actual error
+        return MathJax.Callback.After([toMathML,jax,callback],err.restart);
+    }
+    MathJax.Callback(callback)(mml);
+}
+
+function updateMathJaxBox() {
+    mathjaxBox.innerText = "$$" + latexBox.value + "$$";
+    MathJax.Hub.Typeset();
+    var jax = MathJax.Hub.getAllJax(mathjaxBox)[0];
+    toMathML(jax, function(mml) {
+        pasteBox.value = '<?xml version="1.0"?>\n' + mml;
+    });
+    
+    var copyFeedback = document.getElementById("copyMMLComplete");
+    copyFeedback.textContent = "";
+}
+
+function ShowCopyright() {
+    if (copyrightBox.style.display == "none") {
+        copyrightBox.style.display = "block";
+    } else {
+        copyrightBox.style.display = "none";
+    }
+}
+
+</script>
+<script type="text/javascript">
+function waitCodeCogs1(selector, time) {
+    if(document.querySelector(selector)!=null) {
+        EqEditor.embed('latexToolbar');
+        EqEditor.add(new EqTextArea('latexEquation', 'latexBox'),false);
+        EqEditor.setFormat('png');
+        return;
+    }
+    else {
+        setTimeout(function() {
+            waitCodeCogs1(selector, time);
+        }, time);
+    }
+}
+function waitCodeCogs2(selector, time) {
+    if(document.querySelector(selector)!=null) {
+        document.querySelector("select#dpi option[value='200']").setAttribute("selected", "selected");
+        document.querySelector("select#fontsize option[value*='large']").setAttribute("selected","selected");
+        return;
+    }
+    else {
+        setTimeout(function() {
+            waitCodeCogs2(selector, time);
+        }, time);
+    }
+}
+waitCodeCogs1('#latexEquation', 200);
+waitCodeCogs2('select#dpi', 200);
+</script>
+<script type="text/javascript">
+function copyMMLToClipboard() {
+    var copyText = document.getElementById("pasteBox");
+    copyText.select();
+    document.execCommand("Copy");
+    
+    var copyFeedback = document.getElementById("copyMMLComplete");
+    copyFeedback.textContent = "\u2713";
+}
+</script>
+
+<title>LaTeX to Word Equation Converter</title>
+</head>
+<body>
+
+<h1>latex2word: A LaTeX to Word Equation Converter</h1>
+<p>Y. Cui, Feb 2019</p>
+
+<p><a href="javascript:ShowCopyright();">
+Copyright info
+</a></p>
+
+<div id="copyrightBox" style="display: none">
+    <p><a href="https://github.com/cyrildtm/latex2word">latex2word</a></p>
+    <p>This software is licensed under the MIT License</p>
+    <br>
+    <p>Copyright 2019 Y. Cui</p>
+    <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+    <p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+    <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+    <p/>
+    <p>Check out the CodeCogs Equation Editor</p>
+    <p><a href="http://www.codecogs.com" target="_blank"><img src="http://www.codecogs.com/images/poweredbycodecogs.png" border="0" title="CodeCogs - An Open Source Scientific Library" alt="CodeCogs - An Open Source Scientific Library"></a></p>
+    <p/>
+    <p>MathJax is licensed under the Apache License 2.0  
+    <a href="https://github.com/mathjax/MathJax/blob/master/LICENSE">See their license here.</a></p>
+    <p>Licensed under the Apache License, Version 2.0 (the "License");<br>
+    you may not use this file except in compliance with the License.<br>
+    You may obtain a copy of the License at<br>
+    <br>
+        http://www.apache.org/licenses/LICENSE-2.0<br>
+    <br>
+    Unless required by applicable law or agreed to in writing, software<br>
+    distributed under the License is distributed on an "AS IS" BASIS,<br>
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<br>
+    See the License for the specific language governing permissions and<br>
+    limitations under the License.<br>
+    <p/>
+</div>
+
+<hr>
+
+<p>Step 1: Edit your LaTeX math expression here.</p>
+<div id="latexToolbar"></div>
+<div align="center"><textarea id="latexBox" rows="6" cols="70"></textarea></div>
+<div align="center"><img id="latexEquation" align="middle" /></div>
+
+<hr>
+
+<p>Step 2: After you have finished typing, <button type="button" onclick="updateMathJaxBox()">
+Click Here to Update MathJax Content
+</button></p>
+<div id="mathjaxBox"></div>
+
+<hr>
+
+<p>Step 3: 
+Copy the following code into your clipboard, go to Word, right click on the cursor, and choose Paste. 
+(Do not use Ctrl+V. It will not work. )
+<br>
+To paste into PowerPoint, first paste it in Word, then copy the Word Equation object into PowerPoint. 
+</p>
+
+<p align="center"><button type="button" onclick="copyMMLToClipboard()">Copy to Clipboard</button><span id="copyMMLComplete"/></p>
+
+<div align="center"><textarea id="pasteBox" rows="6" cols="70" readonly></textarea></div>
+
+
+</body>
+</html>
